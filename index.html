@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>pdfMake</title>
+    <style>
+        a { margin-left: 10px; font-size: small} label {margin: 0 8px} p { display: flex }
+        button { position: absolute;right: 13px;top:340px; width:80px;border-radius: 8px; }
+    </style>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif">
+    <form method="POST" action="/pdf" target="_blank" enctype="application/x-www-form-urlencoded">
+        <p>
+            <label>Header: <input name="header" value="Mail List"></label>
+            <label>Password: <input type="password" name="pass"></label>
+            <label><input type="checkbox" name="page" checked>Page</label>
+            <label><input type="checkbox" name="land">Landscape</label>
+            <label><input type="checkbox" name="wm">Watermark</label>
+            <span style="flex:1"></span>
+            <a href="" onclick="event.preventDefault(); fetch('/more', { method: 'PUT' })">+25</a>
+            <a href="/data" target="_blank">Raw Data</a>
+            <a href="https://chancejs.com/" target="_blank">Chance</a>
+            <a href="https://pdfmake.github.io/docs/" target="_blank">pdfMake</a>
+        </p>
+        <p>
+            <label style="flex:1">Content<br>
+<textarea name="dd" style="width:100%;height:300px;">data.map((row, n) => ({
+  margin: [0,3], unbreakable: true,
+  columns: [
+    { svg: row.svg, width: 50 },
+    { stack: [
+      { columns: [
+            { text:row.name, fontSize: 14, bold: true, color: row.gender==='male'?'#00008B':'#FF1493'},
+            { text:row.email, italics: true}
+      ]},
+      { columns: [
+            { text: row.dob, width: 'auto', margin: [0,0,10,0] },
+            { text: `ssn-${row.ssn.substr(7)}`, width: 'auto'},
+            { text: row.job+' at '+row.company, width: '*', alignment: 'right'}
+      ]},
+      { columns: [ row.address, { text: row.phone, italics: true} ]},
+    ], margin: [10,0,10,0]},
+    { qr:row.id, fit:60, width:60}
+  ]
+ })
+)</textarea>
+            </label>
+            <label>Fields<br>
+                <select name="fields" multiple size = 11 style="width: 80px; overflow-y: auto;">
+                    <option selected value="address">address</option>
+                    <option selected value="company">company</option>
+                    <option selected value="dob">dob</option>
+                    <option selected value="email">email</option>
+                    <option selected value="gender">gender</option>
+                    <option selected value="id">id</option>
+                    <option selected value="job">job</option>
+                    <option selected value="name">name</option>
+                    <option selected value="phone">phone</option>
+                    <option selected value="ssn">ssn</option>
+                    <option selected value="svg">svg</option>
+                </select>
+            </label>
+        </p>
+        <button type="submit">Generate PDF</button>
+    </form>
+</body>
+</html>
